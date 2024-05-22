@@ -10,6 +10,20 @@ import time
 
 class GifAnimation:
     def __init__(self, gifDir, frameDelay=1000, loop=True, consoleMsg=""):
+        '''
+        Initialization of attributes.
+        
+        gifDir:  is a string that represents the directory path of the gif file.
+        
+        frameDelay:  is an optional parameter representing the delay between
+        frames in milliseconds. Default value is 1000ms (1 second).
+        
+        loop:  defines whether the animation should repeat after reaching the
+        last frame. It's set to True by default, but can be changed to False
+        if you want the animation to stop at the last frame.
+        
+        consoleMsg:  is an optional string that will be displayed in the console while the animation is running.
+        '''
         self.gif = gifDir
         self.delay = frameDelay
         self.loop = loop
@@ -41,7 +55,7 @@ class AnimationWindow:
 
     def Activate(self):
         self.root = tkinter.Tk()
-        self.root.attributes('-fullscreen', True)
+        #self.root.attributes('-fullscreen', True)
         self.file = Image.open(self.gif) 
         self.frames = [tkinter.PhotoImage(file=self.gif, format='gif -index %i'%(i)) for i in range(self.file.n_frames)]
         self.speed = self.delay // len(self.frames) # make one cycle of animation around 4 secs
@@ -55,7 +69,7 @@ class AnimationWindow:
         
     def _center_window(self, win):
         win.wait_visibility() # make sure the window is ready
-        x = (win.winfo_screenwidth() - (win.winfo_width())) // 2
+        x = ((win.winfo_screenwidth()//2) - (win.winfo_width())) // 2
         y = (win.winfo_screenheight() - (win.winfo_height())) // 2
         win.geometry(f'+{x}+{y}')
 
@@ -85,7 +99,6 @@ class AnimationWindow:
                 self.window.overrideredirect(True)
                 self.window.wm_attributes("-alpha", 0.0)
                 self.img = tkinter.Label(self.window, text="", image=self.frames[0])
-                self.img.place(relx=.5, rely=.5, anchor="center")
                 self.img.pack()
                 self._center_window(self.window)
                 
