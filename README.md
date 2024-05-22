@@ -36,8 +36,8 @@ loading.Stop()
 
 **frameDelay**: is an optional parameter representing the delay between  
 frames in milliseconds. Default value is 1000ms (1 second). This delay is
-divided by the total number in the gif, so it effectively controls the
-play speed of the gif.
+divided by the total number of frames in the gif, so it effectively controls 
+the play speed of the gif.
 
 **loop**: defines whether the animation should repeat after reaching the  
 last frame. It's set to True by default, but can be changed to False  
