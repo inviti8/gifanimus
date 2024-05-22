@@ -1,7 +1,11 @@
-from gifanimus import LoadingGif
+from gifanimus import GifAnimation
 import time
 
-loading = LoadingGif('./loading.gif', 4000)
+loading = GifAnimation('./loading.gif', 1000, True, 'LOADING...')
+
+time.sleep(3)
+
+loading.Play()
 
 time.sleep(10)
 

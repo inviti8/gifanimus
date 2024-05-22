@@ -8,24 +8,28 @@ from PIL import Image, ImageTk
 import sys
 import time
 
-class LoadingGif:
-    def __init__(self, gifDir, frameDelay=1000, consoleMsg=""):
+class GifAnimation:
+    def __init__(self, gifDir, frameDelay=1000, loop=True, consoleMsg=""):
         self.gif = gifDir
         self.delay = frameDelay
+        self.loop = loop
         self.msg = consoleMsg
-        self.window = LoadingWindow(self.gif, self.delay, self.msg)
-        self.thread = threading.Thread(target=self.window.new)
+        self.window = AnimationWindow(self.gif, self.delay, self.loop, self.msg)
+        self.thread = threading.Thread(target=self.window.Activate)
         self.thread.setDaemon(True)
+
+    def Play(self):
         self.thread.start()
         
     def Stop(self):
         self.window.Stop()
 
 
-class LoadingWindow:
-    def __init__(self, gifDir, frameDelay, consoleMsg):
+class AnimationWindow:
+    def __init__(self, gifDir, frameDelay, loop, consoleMsg):
         self.gif = gifDir
         self.delay = frameDelay
+        self.loop = loop
         self.msg = consoleMsg
         self.root = None
         self.file = None
@@ -35,9 +39,9 @@ class LoadingWindow:
         self.img = None
         self.active = False
 
-    def new(self):
+    def Activate(self):
         self.root = tkinter.Tk()
-        self.root.wait_visibility(self.root)
+        #self.root.wait_visibility(self.root)
         self.file = Image.open(self.gif) 
         self.frames = [tkinter.PhotoImage(file=self.gif, format='gif -index %i'%(i)) for i in range(self.file.n_frames)]
         self.speed = self.delay // len(self.frames) # make one cycle of animation around 4 secs
@@ -56,12 +60,12 @@ class LoadingWindow:
         win.geometry(f'+{x}+{y}')
 
     def consoleAnimation(self):
-        animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
+        animation = ['  -  ', '  /  ', '  |  ', '  \\  ']
         i = 0
         while self.active:
-            sys.stdout.write(f"\r{self.msg}" + animation[i % len(animation)])
+            sys.stdout.write( animation[i % len(animation)] + f"\r{self.msg}" )
             sys.stdout.flush()
-            time.sleep(0.4)
+            time.sleep(0.25)
             i += 1
             
     def Stop(self):
@@ -88,8 +92,11 @@ class LoadingWindow:
             self.img.config(image=self.frames[n])
             self.img.after(self.speed, self.Play, n+1, top, lbl)
         else:
-            self.img.config(image=self.frames[0])
-            self.img.after(self.speed, self.Play, 0, top, lbl)
+            if self.loop:
+                self.img.config(image=self.frames[0])
+                self.img.after(self.speed, self.Play, 0, top, lbl)
+            else:
+                self.active = False
             
 
 

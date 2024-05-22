@@ -8,5 +8,6 @@ setup(name='gifanimus',
       author='Fibo Metavinci',
       author_email='pszdw-75nat-5227i-bha5s-y7lai-pebdq-o2agp-3xho4-hd6z6-emxrd-nqe@dmail.ai',
       url='https://github.com/inviti8',
-      packages=['pillow==10.3.0'],
+      packages=['gifanimus'],
+      install_requires=['pillow==10.3.0'],
      )
