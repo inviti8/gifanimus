@@ -1,5 +1,5 @@
 # gifanimus
-A very simply package for playing looped gifs
+A very simple package for playing looped gifs
 
 Install the package with pip:
 
