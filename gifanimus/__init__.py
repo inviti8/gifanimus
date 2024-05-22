@@ -26,17 +26,14 @@ class LoadingWindow:
     def __init__(self, gifDir, frameDelay, consoleMsg):
         self.gif = gifDir
         self.delay = frameDelay
+        self.msg = consoleMsg
         self.root = None
         self.file = None
         self.frames = None
-        self.thread = None
-        self.active = False
         self.speed = None
-        self.process_is_alive = False
         self.window = None
         self.img = None
-
-        self.process_is_alive = False
+        self.active = False
 
     def new(self):
         self.root = tkinter.Tk()
@@ -45,7 +42,7 @@ class LoadingWindow:
         self.frames = [tkinter.PhotoImage(file=self.gif, format='gif -index %i'%(i)) for i in range(self.file.n_frames)]
         self.speed = self.delay // len(self.frames) # make one cycle of animation around 4 secs
 
-        self.process_is_alive = True
+        self.active = True
         self.Play()
         thread = threading.Thread(target=self.consoleAnimation)
         thread.setDaemon(True)
@@ -61,19 +58,20 @@ class LoadingWindow:
     def consoleAnimation(self):
         animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
         i = 0
-        while self.process_is_alive:
-            sys.stdout.write("\r | Loading..." + animation[i % len(animation)])
+        while self.active:
+            sys.stdout.write(f"\r{self.msg}" + animation[i % len(animation)])
             sys.stdout.flush()
             time.sleep(0.4)
             i += 1
             
     def Stop(self):
-        self.process_is_alive = False
+        self.active = False
       
     def Play(self, n=0, top=None, lbl=None):
-        if not self.process_is_alive:
+        if not self.active:
             self.window.destroy()
             self.root.destroy()
+            sys.stdout.flush()
             return
         
         if n == 0:
