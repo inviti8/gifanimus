@@ -9,7 +9,7 @@ import sys
 import time
 
 class GifAnimation:
-    def __init__(self, gifDir, frameDelay=1000, loop=True, consoleMsg=""):
+    def __init__(self, gifDir, frameDelay=1000, loop=True, consoleMsg="", quiet=False):
         '''
         Initialization of attributes.
         
@@ -28,7 +28,8 @@ class GifAnimation:
         self.delay = frameDelay
         self.loop = loop
         self.msg = consoleMsg
-        self.window = AnimationWindow(self.gif, self.delay, self.loop, self.msg)
+        self.quiet = quiet
+        self.window = AnimationWindow(self.gif, self.delay, self.loop, self.msg, self.quiet)
         self.thread = threading.Thread(target=self.window.Activate)
         self.thread.setDaemon(True)
 
@@ -40,11 +41,12 @@ class GifAnimation:
 
 
 class AnimationWindow:
-    def __init__(self, gifDir, frameDelay, loop, consoleMsg):
+    def __init__(self, gifDir, frameDelay, loop, consoleMsg, quiet):
         self.gif = gifDir
         self.delay = frameDelay
         self.loop = loop
         self.msg = consoleMsg
+        self.quiet = quiet
         self.root = None
         self.file = None
         self.frames = None
@@ -55,16 +57,18 @@ class AnimationWindow:
 
     def Activate(self):
         self.root = tkinter.Tk()
-        #self.root.attributes('-fullscreen', True)
+        self.root.attributes('-fullscreen', True)
         self.file = Image.open(self.gif) 
         self.frames = [tkinter.PhotoImage(file=self.gif, format='gif -index %i'%(i)) for i in range(self.file.n_frames)]
         self.speed = self.delay // len(self.frames) # make one cycle of animation around 4 secs
 
         self.active = True
         self.Play()
-        thread = threading.Thread(target=self.consoleAnimation)
-        thread.setDaemon(True)
-        thread.start()
+        if not self.quiet:
+            thread = threading.Thread(target=self.consoleAnimation)
+            thread.setDaemon(True)
+            thread.start()
+
         self.root.mainloop()
         
     def _center_window(self, win):

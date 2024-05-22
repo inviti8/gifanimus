@@ -44,3 +44,5 @@ last frame. It's set to True by default, but can be changed to False
 if you want the animation to stop at the last frame.
 
 **consoleMsg**: is an optional string that will be displayed in the console while the animation is running.
+
+**quiet**: is an optional boolean, if true nothing will be output to the termnal when gif animation is playing.
