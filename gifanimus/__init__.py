@@ -41,7 +41,7 @@ class AnimationWindow:
 
     def Activate(self):
         self.root = tkinter.Tk()
-        #self.root.wait_visibility(self.root)
+        self.root.attributes('-fullscreen', True)
         self.file = Image.open(self.gif) 
         self.frames = [tkinter.PhotoImage(file=self.gif, format='gif -index %i'%(i)) for i in range(self.file.n_frames)]
         self.speed = self.delay // len(self.frames) # make one cycle of animation around 4 secs
@@ -55,8 +55,8 @@ class AnimationWindow:
         
     def _center_window(self, win):
         win.wait_visibility() # make sure the window is ready
-        x = (win.winfo_screenwidth() - (win.winfo_width()//2)) // 2
-        y = (win.winfo_screenheight() - (win.winfo_height()//2)) // 2
+        x = (win.winfo_screenwidth() - (win.winfo_width())) // 2
+        y = (win.winfo_screenheight() - (win.winfo_height())) // 2
         win.geometry(f'+{x}+{y}')
 
     def consoleAnimation(self):
@@ -81,10 +81,11 @@ class AnimationWindow:
         if n == 0:
             if self.img == None:
                 self.root.withdraw()
-                self.window = tkinter.Toplevel()
+                self.window = tkinter.Toplevel(width=self.root.winfo_width(), height=self.root.winfo_height())
                 self.window.overrideredirect(True)
                 self.window.wm_attributes("-alpha", 0.0)
                 self.img = tkinter.Label(self.window, text="", image=self.frames[0])
+                self.img.place(relx=.5, rely=.5, anchor="center")
                 self.img.pack()
                 self._center_window(self.window)
                 
