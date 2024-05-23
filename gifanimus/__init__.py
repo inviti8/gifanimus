@@ -1,4 +1,4 @@
-"""A Simple Gif Animation Window"""
+"""A Simple Gif Animation Window, By: Fibo Metavinci"""
 
 __version__ = "0.01"
 
