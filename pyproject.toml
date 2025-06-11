@@ -10,7 +10,7 @@ dynamic = ["version", "description"]
 dependencies = [
 	"pillow==11.1.0",
 	"certifi==2025.4.26",
-	"charset-normalizer==3.4.1",
+	"charset-normalizer==3.4.2",
 	"docutils==0.21.2",
 	"idna==3.10",
 	"requests==2.32.3",

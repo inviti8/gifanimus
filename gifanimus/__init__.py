@@ -1,6 +1,6 @@
 """A Simple Gif Animation Window, By: Fibo Metavinci"""
 
-__version__ = "0.06"
+__version__ = "0.07"
 
 import threading
 import tkinter
