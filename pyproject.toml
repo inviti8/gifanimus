@@ -15,7 +15,7 @@ dependencies = [
 	"idna==3.10",
 	"requests==2.32.3",
 	"tomli_w==1.2.0",
-	"urllib3==2.3.0"
+	"urllib3==2.4.0"
 ]
 
 [project.urls]
