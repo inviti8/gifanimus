@@ -1,6 +1,6 @@
 """A Simple Gif Animation Window, By: Fibo Metavinci"""
 
-__version__ = "0.10"
+__version__ = "0.11"
 
 import threading
 import tkinter
@@ -55,6 +55,7 @@ class AnimationWindow:
         self.window = None
         self.img = None
         self.active = False
+        self.stop_requested = False
         self.is_windows = platform.system() == "Windows"
         self.is_macos = platform.system() == "Darwin"
 
@@ -136,10 +137,25 @@ class AnimationWindow:
             i += 1
             
     def Stop(self):
+        self.stop_requested = True
         self.active = False
+        # Schedule cleanup in the main thread using after()
+        if self.root:
+            self.root.after(0, self._cleanup)
+      
+    def _cleanup(self):
+        """Safely cleanup tkinter widgets from the main thread"""
+        if self.window:
+            self.window.destroy()
+            self.window = None
+        if self.root:
+            self.root.quit()
+            self.root.destroy()
+            self.root = None
+        sys.stdout.flush()
       
     def Play(self, n=0, top=None, lbl=None):
-        if not self.active:
+        if not self.active or self.stop_requested:
             if self.window:
                 self.window.destroy()
             if self.root:
