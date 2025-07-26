@@ -1,6 +1,6 @@
 """A Simple Gif Animation Window, By: Fibo Metavinci"""
 
-__version__ = "0.11"
+__version__ = "0.12"
 
 import threading
 import tkinter
@@ -130,11 +130,15 @@ class AnimationWindow:
     def consoleAnimation(self):
         animation = ['  -  ', '  /  ', '  |  ', '  \\  ']
         i = 0
-        while self.active:
-            sys.stdout.write( animation[i % len(animation)] + f"\r{self.msg}" )
-            sys.stdout.flush()
-            time.sleep(0.25)
-            i += 1
+        while self.active and not self.stop_requested:
+            try:
+                sys.stdout.write( animation[i % len(animation)] + f"\r{self.msg}" )
+                sys.stdout.flush()
+                time.sleep(0.25)
+                i += 1
+            except:
+                # If stdout is closed or other error, break
+                break
             
     def Stop(self):
         self.stop_requested = True
@@ -145,22 +149,35 @@ class AnimationWindow:
       
     def _cleanup(self):
         """Safely cleanup tkinter widgets from the main thread"""
-        if self.window:
-            self.window.destroy()
+        try:
+            # Clear image references first to prevent garbage collection issues
+            if self.img:
+                self.img.config(image="")
+                self.img = None
+            
+            # Clear frames to prevent garbage collection issues
+            if self.frames:
+                self.frames.clear()
+                self.frames = None
+            
+            if self.window and self.window.winfo_exists():
+                self.window.destroy()
             self.window = None
-        if self.root:
-            self.root.quit()
-            self.root.destroy()
+            
+            if self.root and self.root.winfo_exists():
+                self.root.quit()
+                self.root.destroy()
             self.root = None
-        sys.stdout.flush()
+            
+            sys.stdout.flush()
+        except Exception as e:
+            # If cleanup fails, just print error and continue
+            print(f"Cleanup error: {e}")
+            pass
       
     def Play(self, n=0, top=None, lbl=None):
         if not self.active or self.stop_requested:
-            if self.window:
-                self.window.destroy()
-            if self.root:
-                self.root.destroy()
-            sys.stdout.flush()
+            # Don't destroy widgets here - let _cleanup handle it
             return
         
         if n == 0:
