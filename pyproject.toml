@@ -8,14 +8,13 @@ authors = [{name = "Fibo Metavinci", email = "pszdw-75nat-5227i-bha5s-y7lai-pebd
 readme = "README.md"
 dynamic = ["version", "description"]
 dependencies = [
-	"pillow==11.1.0",
-	"certifi==2025.4.26",
-	"charset-normalizer==3.4.2",
-	"docutils==0.21.2",
-	"idna==3.10",
-	"requests==2.32.3",
-	"tomli_w==1.2.0",
-	"urllib3==2.4.0"
+	"pillow>=11.1.0",
+	"certifi>=2025.4.26",
+	"charset-normalizer>=3.4.2",
+	"docutils>=0.21.2",
+	"idna>=3.10",
+	"tomli_w>=1.2.0",
+	"urllib3>=2.4.0"
 ]
 
 [project.urls]
