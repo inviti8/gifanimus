@@ -1,6 +1,6 @@
 """A Simple Gif Animation Window, By: Fibo Metavinci"""
 
-__version__ = "0.12"
+__version__ = "0.08"
 
 import threading
 import tkinter
@@ -68,9 +68,10 @@ class AnimationWindow:
             self.root.overrideredirect(True)
             self.root.attributes('-alpha', 0.0)
         elif self.is_macos:
-            # On macOS, use a minimal root window (avoid fullscreen issues)
+            # On macOS, use a minimal root window but avoid problematic features
             self.root.geometry("1x1+0+0")
-            self.root.overrideredirect(True)
+            # Don't use overrideredirect on macOS as it can cause issues
+            # self.root.overrideredirect(True)
             self.root.attributes('-alpha', 0.0)
         else:
             # On Linux, use fullscreen
@@ -182,14 +183,20 @@ class AnimationWindow:
         
         if n == 0:
             if self.img == None:
-                if self.is_windows or self.is_macos:
-                    # On Windows and macOS, create the window directly without withdrawing root
+                if self.is_windows:
+                    # On Windows, create the window directly without withdrawing root
                     self.window = tkinter.Toplevel()
+                    self.window.overrideredirect(True)
+                elif self.is_macos:
+                    # On macOS, create window without overrideredirect
+                    self.window = tkinter.Toplevel()
+                    # Don't use overrideredirect on macOS
+                    # self.window.overrideredirect(True)
                 else:
                     self.root.withdraw()
                     self.window = tkinter.Toplevel(width=self.root.winfo_width(), height=self.root.winfo_height())
+                    self.window.overrideredirect(True)
                 
-                self.window.overrideredirect(True)
                 # Remove the problematic alpha setting that makes window invisible
                 # self.window.wm_attributes("-alpha", 0.0)
                 
